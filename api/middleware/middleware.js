@@ -7,7 +7,7 @@ function logger(req, res, next) {
 
 async function validateUserId(req, res, next) {
   try {
-    const user = Users.getById(req.params.id)
+    const user = await Users.getById(req.params.id)
     req.user = user
     next()
   } catch(err) {
@@ -16,11 +16,21 @@ async function validateUserId(req, res, next) {
 }
 
 function validateUser(req, res, next) {
-  // DO YOUR MAGIC
+  let { name } = req.body
+  if(!name) {
+    res.status(400).json({ message: "missing required name field" })
+  } else {
+    next()
+  }
 }
 
 function validatePost(req, res, next) {
-  // DO YOUR MAGIC
+  let { text } = req.body
+  if(!text) {
+    res.status(400).json({ message: "missing required text field" })
+  } else {
+    next()
+  }
 }
 
 // do not forget to expose these functions to other modules
