@@ -8,9 +8,11 @@ server.use(express.json())
 
 // global middlewares and the user's router need to be connected here
 
-const {logger} = require('./middleware/middleware')
+const usersRouter = require('./users/users-router')
 
-server.use(logger)
+const { logger } = require('./middleware/middleware')
+
+server.use('/api/users', logger, usersRouter)
 
 server.get('/', (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`);
