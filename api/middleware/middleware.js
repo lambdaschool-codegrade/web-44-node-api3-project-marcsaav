@@ -1,7 +1,7 @@
 const Users = require('../users/users-model')
 
 function logger(req, res, next) {
-  console.log(`Method: ${req.method}, URL: ${req.baseUrl}, ${Date.now()}`)
+  console.log(`Method: ${req.method}, URL: ${req.baseUrl + req.url}, ${Date.now()}`)
   next()
 }
 
