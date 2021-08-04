@@ -5,14 +5,18 @@ function logger(req, res, next) {
   next()
 }
 
-async function validateUserId(req, res, next) {
-  try {
-    const user = await Users.getById(req.params.id)
-    req.user = user
-    next()
-  } catch(err) {
-    next({ status: 404, message: 'user not found'})
-  }
+function validateUserId(req, res, next) {
+  let { id } = req.params
+  Users.getById(id)
+    .then((user) => {
+      if(!user) {
+        res.status(404).json({ message: 'user not found' })
+      } else {
+        req.user = user
+        next()
+      }
+    })
+    .catch(next)
 }
 
 function validateUser(req, res, next) {

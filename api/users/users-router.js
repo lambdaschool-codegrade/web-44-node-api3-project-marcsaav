@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', validateUserId, async (req, res) => {
+router.get('/:id', validateUserId, (req, res) => {
   // RETURN THE USER OBJECT
   // this needs a middleware to verify user id
     let user = req.user
@@ -39,15 +39,28 @@ router.post('/', validateUser, async (req, res) => {
   }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validateUserId, validateUser, async (req, res) => {
   // RETURN THE FRESHLY UPDATED USER OBJECT
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
+  try {
+    let { id } = req.params
+    const user = await Users.update(id, req.body)
+    res.status(200).json(user)
+  } catch(err) {
+    res.status(500).json({ message: err.message })
+  }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validateUserId, async (req, res) => {
   // RETURN THE FRESHLY DELETED USER OBJECT
   // this needs a middleware to verify user id
+  try {
+    await Users.remove(req.params.id)
+    res.status(200).json(req.user)
+  } catch(err) {
+    res.status(500).json()
+  }
 });
 
 router.get('/:id/posts', (req, res) => {
